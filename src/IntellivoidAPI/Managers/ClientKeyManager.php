@@ -7,10 +7,10 @@
     use IntellivoidAPI\IntellivoidAPI;
 
     /**
-     * Class AccessKeyManager
+     * Class ClientKeyManager
      * @package IntellivoidAPI\Managers
      */
-    class AccessKeyManager
+    class ClientKeyManager
     {
         /**
          * @var IntellivoidAPI
@@ -18,12 +18,11 @@
         private $intellivoidAPI;
 
         /**
-         * AccessKeyManager constructor.
+         * ClientKeyManager constructor.
          * @param IntellivoidAPI $intellivoidAPI
          */
         public function __construct(IntellivoidAPI $intellivoidAPI)
         {
             $this->intellivoidAPI = $intellivoidAPI;
         }
-
     }
