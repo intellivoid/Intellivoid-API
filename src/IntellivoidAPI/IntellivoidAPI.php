@@ -11,6 +11,13 @@
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
 
+    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'RateLimitName.php');
+
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RateLimitExceededException.php');
+
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKey.php');
+
     include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessKeyManager.php');
 
     if(class_exists('acm\acm') == false)
@@ -70,7 +77,7 @@
                 $this->DatabaseConfiguration['Port']
             );
 
-            $this->AccessKeyManager = new AccessKeyManager();
+            $this->AccessKeyManager = new AccessKeyManager($this);
         }
 
         /**
