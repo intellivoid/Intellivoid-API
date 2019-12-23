@@ -6,6 +6,7 @@
 
     use acm\acm;
     use Exception;
+    use mysqli;
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
 
@@ -31,6 +32,11 @@
         private $DatabaseConfiguration;
 
         /**
+         * @var mysqli
+         */
+        private $database;
+
+        /**
          * IntellivoidAPI constructor.
          */
         public function __construct()
@@ -47,5 +53,39 @@
                 print($e->getMessage());
                 exit(0);
             }
+
+            $this->database = new mysqli(
+                $this->DatabaseConfiguration['Host'],
+                $this->DatabaseConfiguration['Username'],
+                $this->DatabaseConfiguration['Password'],
+                $this->DatabaseConfiguration['Name'],
+                $this->DatabaseConfiguration['Port']
+            );
         }
+
+        /**
+         * @return acm
+         */
+        public function getAcm()
+        {
+            return $this->acm;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getDatabaseConfiguration()
+        {
+            return $this->DatabaseConfiguration;
+        }
+
+        /**
+         * @return mysqli
+         */
+        public function getDatabase()
+        {
+            return $this->database;
+        }
+
+
     }
