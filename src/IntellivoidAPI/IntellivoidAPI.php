@@ -6,9 +6,12 @@
 
     use acm\acm;
     use Exception;
+    use IntellivoidAPI\Managers\AccessKeyManager;
     use mysqli;
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
+
+    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessKeyManager.php');
 
     if(class_exists('acm\acm') == false)
     {
@@ -37,6 +40,11 @@
         private $database;
 
         /**
+         * @var AccessKeyManager
+         */
+        private $AccessKeyManager;
+
+        /**
          * IntellivoidAPI constructor.
          */
         public function __construct()
@@ -61,6 +69,8 @@
                 $this->DatabaseConfiguration['Name'],
                 $this->DatabaseConfiguration['Port']
             );
+
+            $this->AccessKeyManager = new AccessKeyManager();
         }
 
         /**
@@ -85,6 +95,14 @@
         public function getDatabase()
         {
             return $this->database;
+        }
+
+        /**
+         * @return AccessKeyManager
+         */
+        public function getAccessKeyManager()
+        {
+            return $this->AccessKeyManager;
         }
 
 
