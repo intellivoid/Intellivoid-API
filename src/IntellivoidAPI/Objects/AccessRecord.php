@@ -3,6 +3,9 @@
 
     namespace IntellivoidAPI\Objects;
 
+    use IntellivoidAPI\Abstracts\RateLimitName;
+    use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
+
     /**
      * Class AccessRecord
      * @package IntellivoidAPI\Objects
@@ -57,6 +60,20 @@
          * @var array
          */
         public $Variables;
+
+        /**
+         * Rate Limit that has been applied to this access key
+         *
+         * @var string
+         */
+        public $RateLimitType;
+
+        /**
+         * The rate limit configuration applied to this access record
+         *
+         * @var IntervalLimit
+         */
+        public $RateLimitConfiguration;
 
         /**
          * Unix Timestamp of when this access record was last used
@@ -125,6 +142,13 @@
          */
         public function toArray(): array
         {
+            $RateLimitConfiguration = array();
+
+            if($this->RateLimitType !== RateLimitName::None)
+            {
+                $RateLimitConfiguration = $this->RateLimitConfiguration->toArray();
+            }
+
             return array(
                 'id' => (int)$this->ID,
                 'access_key' => $this->AccessKey,
@@ -133,6 +157,8 @@
                 'subscription_id' => (int)$this->SubscriptionID,
                 'status' => (int)$this->Status,
                 'variables' => $this->Variables,
+                'rate_limit_type' => $this->RateLimitType,
+                'rate_limit_configuration' => $RateLimitConfiguration,
                 'last_activity' => (int)$this->LastActivity,
                 'created' => (int)$this->CreatedTimestamp
             );
@@ -185,6 +211,26 @@
             else
             {
                 $AccessRecordObject->Variables = array();
+            }
+
+            $AccessRecordObject->RateLimitType = RateLimitName::None;
+            $AccessRecordObject->RateLimitConfiguration = array();
+
+            if(isset($data['rate_limit_type']))
+            {
+                if($data['rate_limit_type'] !== RateLimitName::None)
+                {
+                    if(isset($data['rate_limit_configuration']))
+                    {
+                        switch($data['rate_limit_type'])
+                        {
+                            case RateLimitName::IntervalLimit:
+                                $AccessRecordObject->RateLimitConfiguration = IntervalLimit::fromArray($data['rate_limit_configuration']);
+                                $AccessRecordObject->RateLimitType = RateLimitName::IntervalLimit;
+                                break;
+                        }
+                    }
+                }
             }
 
             if(isset($data['last_activity']))
