@@ -52,6 +52,13 @@
         public $Status;
 
         /**
+         * Variables that is associated with this Access Record
+         *
+         * @var array
+         */
+        public $Variables;
+
+        /**
          * Unix Timestamp of when this access record was last used
          *
          * @var int
@@ -64,6 +71,52 @@
          * @var int
          */
         public $CreatedTimestamp;
+
+        /**
+         * Sets a variable to the object
+         *
+         * @param string $key
+         * @param $value
+         * @return bool
+         */
+        public function setVariable(string $key, $value): bool
+        {
+            $this->Variables[$key] = $value;
+            return true;
+        }
+
+        /**
+         * Removes an existing variable from the object
+         *
+         * @param string $key
+         * @return bool
+         */
+        public function removeVariable(string $key): bool
+        {
+            if(isset($this->Variables[$key]) == false)
+            {
+                return false;
+            }
+
+            $this->Variables = array_diff($this->Variables, [$key]);
+            return true;
+        }
+
+        /**
+         * Returns a variable from the object
+         *
+         * @param string $key
+         * @return mixed|null
+         */
+        public function getVariable(string $key)
+        {
+            if(isset($this->Variables[$key]) == false)
+            {
+                return null;
+            }
+
+            return $this->Variables[$key];
+        }
 
         /**
          * Returns an array which represents this object's structure and values
@@ -79,6 +132,7 @@
                 'application_id' => (int)$this->ApplicationID,
                 'subscription_id' => (int)$this->SubscriptionID,
                 'status' => (int)$this->Status,
+                'variables' => $this->Variables,
                 'last_activity' => (int)$this->LastActivity,
                 'created' => (int)$this->CreatedTimestamp
             );
@@ -122,6 +176,15 @@
             if(isset($data['status']))
             {
                 $AccessRecordObject->Status = (int)$data['status'];
+            }
+
+            if(isset($data['variables']))
+            {
+                $AccessRecordObject->Variables = $data['variables'];
+            }
+            else
+            {
+                $AccessRecordObject->Variables = array();
             }
 
             if(isset($data['last_activity']))

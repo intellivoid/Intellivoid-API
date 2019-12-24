@@ -26,4 +26,6 @@
             $this->intellivoidAPI = $intellivoidAPI;
         }
 
+        public function createAccessRecord()
+
     }
