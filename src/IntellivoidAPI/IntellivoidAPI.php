@@ -6,7 +6,7 @@
 
     use acm\acm;
     use Exception;
-    use IntellivoidAPI\Managers\AccessKeyManager;
+    use IntellivoidAPI\Managers\AccessRecordManager;
     use mysqli;
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
@@ -16,9 +16,9 @@
     include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RateLimitExceededException.php');
 
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKey.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
 
-    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessKeyManager.php');
+    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessRecordManager.php');
 
     if(class_exists('acm\acm') == false)
     {
@@ -47,7 +47,7 @@
         private $database;
 
         /**
-         * @var AccessKeyManager
+         * @var AccessRecordManager
          */
         private $AccessKeyManager;
 
@@ -77,7 +77,7 @@
                 $this->DatabaseConfiguration['Port']
             );
 
-            $this->AccessKeyManager = new AccessKeyManager($this);
+            $this->AccessKeyManager = new AccessRecordManager($this);
         }
 
         /**
@@ -105,7 +105,7 @@
         }
 
         /**
-         * @return AccessKeyManager
+         * @return AccessRecordManager
          */
         public function getAccessKeyManager()
         {

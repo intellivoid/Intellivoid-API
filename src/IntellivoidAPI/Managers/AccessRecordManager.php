@@ -10,7 +10,7 @@
      * Class AccessKeyManager
      * @package IntellivoidAPI\Managers
      */
-    class AccessKeyManager
+    class AccessRecordManager
     {
         /**
          * @var IntellivoidAPI
