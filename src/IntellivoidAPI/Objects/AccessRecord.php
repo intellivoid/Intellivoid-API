@@ -3,7 +3,10 @@
 
     namespace IntellivoidAPI\Objects;
 
-
+    /**
+     * Class AccessRecord
+     * @package IntellivoidAPI\Objects
+     */
     class AccessRecord
     {
         /**
