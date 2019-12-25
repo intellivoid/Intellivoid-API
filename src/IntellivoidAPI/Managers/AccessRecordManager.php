@@ -5,8 +5,11 @@
 
     use IntellivoidAPI\Abstracts\AccessRecordStatus;
     use IntellivoidAPI\Abstracts\RateLimitName;
+    use IntellivoidAPI\Abstracts\SearchMethods\AccessRecordSearchMethod;
+    use IntellivoidAPI\Exceptions\AccessRecordNotFoundException;
     use IntellivoidAPI\Exceptions\DatabaseException;
     use IntellivoidAPI\Exceptions\InvalidRateLimitConfiguration;
+    use IntellivoidAPI\Exceptions\InvalidSearchMethodException;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\AccessRecord;
     use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
@@ -101,6 +104,68 @@
             else
             {
                 throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
+        }
+
+        /**
+         * Returns a access record from the database
+         *
+         * @param string $search_by
+         * @param $value
+         * @return AccessRecord
+         * @throws AccessRecordNotFoundException
+         * @throws DatabaseException
+         * @throws InvalidSearchMethodException
+         */
+        public function getAccessRecord(string $search_by, $value): AccessRecord
+        {
+            switch($search_by)
+            {
+                case AccessRecordSearchMethod::byId:
+                    $search_by = $this->intellivoidAPI->getDatabase()->real_escape_string($search_by);
+                    $value = (int)$value;
+                    break;
+
+                case AccessRecordSearchMethod::byAccessKey:
+                    $search_by = $this->intellivoidAPI->getDatabase()->real_escape_string($search_by);
+                    $value = $this->intellivoidAPI->getDatabase()->real_escape_string($value);
+                    break;
+
+                default:
+                    throw new InvalidSearchMethodException();
+            }
+
+            $Query = QueryBuilder::select('access_records', [
+                'id',
+                'access_key',
+                'last_changed_access_key',
+                'application_id',
+                'subscription_id',
+                'status',
+                'variables',
+                'rate_limit_type',
+                'rate_limit_configuration',
+                'last_activity',
+                'created'
+            ], $search_by, $value);
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
+            if($QueryResults == false)
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
+            else
+            {
+                if($QueryResults->num_rows !== 1)
+                {
+                    throw new AccessRecordNotFoundException();
+                }
+
+                $Row = $QueryResults->fetch_array(MYSQLI_ASSOC);
+                $Row['variables'] = ZiProto::decode($Row['variables']);
+                $Row['rate_limit_configuration'] = ZiProto::decode($Row['rate_limit_configuration']);
+
+                return AccessRecord::fromArray($Row);
             }
         }
 
