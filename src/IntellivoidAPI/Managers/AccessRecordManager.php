@@ -5,11 +5,13 @@
 
     use IntellivoidAPI\Abstracts\AccessRecordStatus;
     use IntellivoidAPI\Abstracts\RateLimitName;
+    use IntellivoidAPI\Exceptions\DatabaseException;
     use IntellivoidAPI\Exceptions\InvalidRateLimitConfiguration;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\AccessRecord;
     use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
     use IntellivoidAPI\Utilities\Hashing;
+    use msqg\QueryBuilder;
     use ZiProto\ZiProto;
 
     /**
@@ -32,7 +34,18 @@
             $this->intellivoidAPI = $intellivoidAPI;
         }
 
-        public function createAccessRecord(int $application_id, string $rate_limit_type=RateLimitName::None, array $rate_limit_configuration=array()): AccessRecord
+        /**
+         * Creates a new Access Record
+         *
+         * @param int $application_id
+         * @param int $subscription_id
+         * @param string $rate_limit_type
+         * @param array $rate_limit_configuration
+         * @return AccessRecord
+         * @throws DatabaseException
+         * @throws InvalidRateLimitConfiguration
+         */
+        public function createAccessRecord(int $application_id, $subscription_id=0, string $rate_limit_type=RateLimitName::None, array $rate_limit_configuration=array()): AccessRecord
         {
             $creation_timestamp = (int)time();
             $last_activity = 0;
@@ -61,8 +74,34 @@
                     throw new InvalidRateLimitConfiguration();
             }
 
-            $status = AccessRecordStatus::Available;
+            $status = (int)AccessRecordStatus::Available;
+            $subscription_id = (int)$subscription_id;
+            $variables = ZiProto::encode(array());
+            $variables = $this->intellivoidAPI->getDatabase()->real_escape_string($variables);
 
+            $Query = QueryBuilder::insert_into('access_records', array(
+                'access_key' => $access_key,
+                'application_id' => $application_id,
+                'created' => $creation_timestamp,
+                'last_activity' => $last_activity,
+                'last_changed_access_key' => $last_changed_access_key,
+                'rate_limit_configuration' => $rate_limit_configuration,
+                'rate_limit_type' =>  $rate_limit_type,
+                'status' => $status,
+                'subscription_id' => $subscription_id,
+                'variables' => $variables
+            ));
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
+            if($QueryResults == true)
+            {
+                // TODO: Return access record that was created
+                return null;
+            }
+            else
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
         }
 
     }
