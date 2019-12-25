@@ -6,6 +6,7 @@
     use IntellivoidAPI\Abstracts\RateLimitName;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\AccessRecord;
+    use IntellivoidAPI\Utilities\Hashing;
 
     /**
      * Class AccessKeyManager
@@ -33,7 +34,8 @@
             $last_activity = 0;
             $application_id = (int)0;
 
-            $access_key =
+            $access_key = Hashing::generateAccessKey($application_id, $creation_timestamp, 0);
+            
         }
 
     }

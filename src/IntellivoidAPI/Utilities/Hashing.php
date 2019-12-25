@@ -30,4 +30,20 @@
             }
             return($res);
         }
+
+        /**
+         * Generates an access key, the ID is optional
+         *
+         * @param int $application_id
+         * @param int $timestamp
+         * @param int $id
+         * @return string
+         */
+        public static function generateAccessKey(int $application_id, int $timestamp, int $id=0): string
+        {
+            $first_part = hash('crc32b', $application_id);
+            $second_part = hash('crc32b', $id);
+            $pepper =  self::pepper($first_part . $second_part . $timestamp);
+            return hash('sha512', $first_part . $second_part . $timestamp . $pepper);
+        }
     }
