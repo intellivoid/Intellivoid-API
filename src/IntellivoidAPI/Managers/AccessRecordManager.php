@@ -45,8 +45,10 @@
          * @param string $rate_limit_type
          * @param array $rate_limit_configuration
          * @return AccessRecord
+         * @throws AccessRecordNotFoundException
          * @throws DatabaseException
          * @throws InvalidRateLimitConfiguration
+         * @throws InvalidSearchMethodException
          */
         public function createAccessRecord(int $application_id, $subscription_id=0, string $rate_limit_type=RateLimitName::None, array $rate_limit_configuration=array()): AccessRecord
         {
@@ -98,8 +100,7 @@
 
             if($QueryResults == true)
             {
-                // TODO: Return access record that was created
-                return null;
+                return $this->getAccessRecord(AccessRecordSearchMethod::byAccessKey, $access_key);
             }
             else
             {
