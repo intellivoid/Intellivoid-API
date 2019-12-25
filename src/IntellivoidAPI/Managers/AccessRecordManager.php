@@ -243,6 +243,33 @@
             {
                 throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
             }
+        }
 
+        /**
+         * Deletes an existing Access Record form the database
+         *
+         * @param AccessRecord $accessRecord
+         * @return bool
+         * @throws AccessRecordNotFoundException
+         * @throws DatabaseException
+         * @throws InvalidSearchMethodException
+         */
+        public function deleteAccessRecord(AccessRecord $accessRecord): bool
+        {
+            // Will throw an exception if the Access Record does not exist
+            $this->getAccessRecord(AccessRecordSearchMethod::byId, $accessRecord->ID);
+
+            $ID = (int)$accessRecord->ID;
+            $Query = "DELETE FROM `access_records` WHERE id=" . $ID . ";";
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
+            if($QueryResults == true)
+            {
+                return true;
+            }
+            else
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
         }
     }
