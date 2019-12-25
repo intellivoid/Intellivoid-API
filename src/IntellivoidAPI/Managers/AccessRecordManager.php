@@ -3,10 +3,14 @@
 
     namespace IntellivoidAPI\Managers;
 
+    use IntellivoidAPI\Abstracts\AccessRecordStatus;
     use IntellivoidAPI\Abstracts\RateLimitName;
+    use IntellivoidAPI\Exceptions\InvalidRateLimitConfiguration;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\AccessRecord;
+    use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
     use IntellivoidAPI\Utilities\Hashing;
+    use ZiProto\ZiProto;
 
     /**
      * Class AccessKeyManager
@@ -41,9 +45,23 @@
             {
                 case RateLimitName::None:
                     $rate_limit_type = $this->intellivoidAPI->getDatabase()->real_escape_string(RateLimitName::None);
-                    $rate_limit_configuration = ZiProto
-                    $rate_limit_configuration =
+                    $rate_limit_configuration = ZiProto::encode(array());
+                    $rate_limit_configuration = $this->intellivoidAPI->getDatabase()->real_escape_string($rate_limit_configuration);
+                    break;
+
+                case RateLimitName::IntervalLimit:
+                    $rate_limit_type = $this->intellivoidAPI->getDatabase()->real_escape_string(RateLimitName::IntervalLimit);
+
+                    /** @var IntervalLimit $rate_limit_configuration */
+                    $rate_limit_configuration = ZiProto::encode($rate_limit_configuration->toArray());
+                    $rate_limit_configuration = $this->intellivoidAPI->getDatabase()->real_escape_string($rate_limit_configuration);
+                    break;
+
+                default:
+                    throw new InvalidRateLimitConfiguration();
             }
+
+            $status = AccessRecordStatus::Available;
 
         }
 
