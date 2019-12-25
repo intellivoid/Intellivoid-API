@@ -49,12 +49,14 @@
          * @throws DatabaseException
          * @throws InvalidRateLimitConfiguration
          * @throws InvalidSearchMethodException
+         * @noinspection DuplicatedCode
+         * @noinspection PhpUnused
          */
         public function createAccessRecord(int $application_id, $subscription_id=0, string $rate_limit_type=RateLimitName::None, array $rate_limit_configuration=array()): AccessRecord
         {
             $creation_timestamp = (int)time();
             $last_activity = 0;
-            $application_id = (int)0;
+            $application_id = (int)$application_id;
 
             $access_key = Hashing::generateAccessKey($application_id, $creation_timestamp, 0);
             $last_changed_access_key = 0;
@@ -117,6 +119,7 @@
          * @throws AccessRecordNotFoundException
          * @throws DatabaseException
          * @throws InvalidSearchMethodException
+         * @noinspection PhpUnused
          */
         public function getAccessRecord(string $search_by, $value): AccessRecord
         {
@@ -170,4 +173,76 @@
             }
         }
 
+        /**
+         * Updates an existing access record in the database
+         *
+         * @param AccessRecord $accessRecord
+         * @return bool
+         * @throws AccessRecordNotFoundException
+         * @throws DatabaseException
+         * @throws InvalidRateLimitConfiguration
+         * @throws InvalidSearchMethodException
+         * @noinspection DuplicatedCode
+         * @noinspection PhpUnused
+         */
+        public function updateAccessRecord(AccessRecord $accessRecord): bool
+        {
+            // Will throw an exception if the Access Record does not exist
+            $this->getAccessRecord(AccessRecordSearchMethod::byId, $accessRecord->ID);
+
+            $access_key = $this->intellivoidAPI->getDatabase()->real_escape_string($accessRecord->AccessKey);
+            $last_changed_access_key = (int)$accessRecord->LastChangedAccessKey;
+            $application_id = (int)$accessRecord->ApplicationID;
+            $subscription_id = (int)$accessRecord->SubscriptionID;
+            $status = (int)$accessRecord->Status;
+            $variables = $this->intellivoidAPI->getDatabase()->real_escape_string(ZiProto::encode($accessRecord->Variables));
+
+            $rate_limit_type = $accessRecord->RateLimitType;
+            $rate_limit_configuration = $accessRecord->RateLimitConfiguration;
+
+            switch($rate_limit_type)
+            {
+                case RateLimitName::None:
+                    $rate_limit_type = $this->intellivoidAPI->getDatabase()->real_escape_string(RateLimitName::None);
+                    $rate_limit_configuration = ZiProto::encode(array());
+                    $rate_limit_configuration = $this->intellivoidAPI->getDatabase()->real_escape_string($rate_limit_configuration);
+                    break;
+
+                case RateLimitName::IntervalLimit:
+                    $rate_limit_type = $this->intellivoidAPI->getDatabase()->real_escape_string(RateLimitName::IntervalLimit);
+
+                    /** @var IntervalLimit $rate_limit_configuration */
+                    $rate_limit_configuration = ZiProto::encode($rate_limit_configuration->toArray());
+                    $rate_limit_configuration = $this->intellivoidAPI->getDatabase()->real_escape_string($rate_limit_configuration);
+                    break;
+
+                default:
+                    throw new InvalidRateLimitConfiguration();
+            }
+
+            $last_activity = (int)$accessRecord->LastActivity;
+
+            $Query = QueryBuilder::update('access_records',array(
+                'access_key' => $access_key,
+                'last_changed_access_key' => $last_changed_access_key,
+                'application_id' => $application_id,
+                'subscription_id' => $subscription_id,
+                'status' => $status,
+                'variables' => $variables,
+                'rate_limit_type' => $rate_limit_type,
+                'rate_limit_configuration' => $rate_limit_configuration,
+                'last_activity' => $last_activity
+            ), 'id', (int)$accessRecord->ID);
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
+            if($QueryResults == true)
+            {
+                return true;
+            }
+            else
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
+
+        }
     }
