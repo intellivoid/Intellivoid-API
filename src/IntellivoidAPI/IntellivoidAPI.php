@@ -30,6 +30,11 @@
         include_once(__DIR__ . DIRECTORY_SEPARATOR . 'msqg' . DIRECTORY_SEPARATOR . 'msqg.php');
     }
 
+    if(class_exists('IntellivoidAccounts\IntellivoidAccounts') == false)
+    {
+        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'IntellivoidAccounts' . DIRECTORY_SEPARATOR . 'IntellivoidAccounts.php');
+    }
+
     /**
      * Class IntellivoidAPI
      * @package IntellivoidAPI
