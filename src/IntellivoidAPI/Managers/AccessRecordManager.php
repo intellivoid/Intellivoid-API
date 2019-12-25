@@ -253,6 +253,7 @@
          * @throws AccessRecordNotFoundException
          * @throws DatabaseException
          * @throws InvalidSearchMethodException
+         * @noinspection PhpUnused
          */
         public function deleteAccessRecord(AccessRecord $accessRecord): bool
         {
