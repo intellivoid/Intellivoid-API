@@ -273,4 +273,28 @@
                 throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
             }
         }
+
+        /**
+         * Generates a new access key and updates it immediately
+         *
+         * @param AccessRecord $accessRecord
+         * @return AccessRecord
+         * @throws AccessRecordNotFoundException
+         * @throws DatabaseException
+         * @throws InvalidRateLimitConfiguration
+         * @throws InvalidSearchMethodException
+         */
+        public function generateNewAccessKey(AccessRecord $accessRecord): AccessRecord
+        {
+            $accessRecord->LastChangedAccessKey = (int)time();
+            $accessRecord->AccessKey = Hashing::generateAccessKey(
+                $accessRecord->ApplicationID,
+                $accessRecord->LastChangedAccessKey,
+                $accessRecord->ID
+            );
+
+            $this->updateAccessRecord($accessRecord);
+
+            return $accessRecord;
+        }
     }
