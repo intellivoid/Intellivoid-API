@@ -101,6 +101,27 @@
         public $Timestamp;
 
         /**
+         * The day that this request took place in
+         *
+         * @var int
+         */
+        public $Day;
+
+        /**
+         * The month that this request took place in
+         *
+         * @var int
+         */
+        public $Month;
+
+        /**
+         * The year that this request took place in
+         *
+         * @var int
+         */
+        public $Year;
+
+        /**
          * Returns the array which represents this object
          *
          * @return array
@@ -121,6 +142,9 @@
                 'response_content_type' => $this->ResponseContentType,
                 'response_length' => (int)$this->ResponseLength,
                 'response_time' => (float)$this->ResponseTime,
+                'day' => (int)$this->Day,
+                'month' => (int)$this->Month,
+                'year' => (int)$this->Year,
                 'timestamp' => (int)$this->Timestamp
             );
         }
@@ -195,6 +219,21 @@
             if(isset($data['response_time']))
             {
                 $RequestRecordObject->ResponseTime = (float)$data['response_time'];
+            }
+
+            if(isset($data['day']))
+            {
+                $RequestRecordObject->Day = (int)$data['day'];
+            }
+
+            if(isset($data['month']))
+            {
+                $RequestRecordObject->Month = (int)$data['month'];
+            }
+
+            if(isset($data['year']))
+            {
+                $RequestRecordObject->Year = (int)$data['year'];
             }
 
             if(isset($data['timestamp']))
