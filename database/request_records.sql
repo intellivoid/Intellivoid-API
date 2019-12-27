@@ -5,6 +5,8 @@ create table request_records
     access_record_id      int(255)     null comment 'The ID of the access record that created this request (0 = None)',
     application_id        int(255)     null comment 'The ID of the application that this request is for (0 = None)',
     request_method        varchar(255) null comment 'The HTTP Request method used to make this request',
+    version               varchar(255) null comment 'The version that the request was based on',
+    path                  varchar(255) null comment 'The request path that was given',
     request_payload       blob         null comment 'Zi Proto encoded data of the GET/POST payload sent from the client',
     ip_address            varchar(255) null comment 'The IP Address that was used to create the request',
     user_agent            varchar(255) null comment 'Base64 Encoded data of the User Agent that was used (512 Characters max)',

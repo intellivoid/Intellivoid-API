@@ -52,6 +52,20 @@
         public $RequestPayload;
 
         /**
+         * The API Version that was used
+         *
+         * @var string
+         */
+        public $Version;
+
+        /**
+         * The path that was requested (URI)
+         *
+         * @var string
+         */
+        public $Path;
+
+        /**
          * The IP Address used to accomplish this request
          *
          * @var string
@@ -136,6 +150,8 @@
                 'application_id' => (int)$this->ApplicationID,
                 'request_method' => $this->RequestMethod,
                 'request_payload' => $this->RequestPayload,
+                'version' => $this->Version,
+                'path' => $this->Path,
                 'ip_address' => $this->IPAddress,
                 'user_agent' => $this->UserAgent,
                 'response_code' => (int)$this->ResponseCode,
@@ -189,6 +205,16 @@
             if(isset($data['request_payload']))
             {
                 $RequestRecordObject->RequestPayload = $data['request_payload'];
+            }
+
+            if(isset($data['version']))
+            {
+                $RequestRecordObject->Version = $data['version'];
+            }
+
+            if(isset($data['path']))
+            {
+                $RequestRecordObject->Path = $data['path'];
             }
 
             if(isset($data['ip_address']))

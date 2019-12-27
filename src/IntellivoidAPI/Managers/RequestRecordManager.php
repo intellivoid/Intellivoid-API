@@ -26,5 +26,5 @@
             $this->intellivoidAPI = $intellivoidAPI;
         }
 
-        publi
+        public logRecord()
     }
