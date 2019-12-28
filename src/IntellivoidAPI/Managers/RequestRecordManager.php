@@ -5,6 +5,8 @@
 
 
     use IntellivoidAPI\IntellivoidAPI;
+    use IntellivoidAPI\Objects\RequestRecord;
+    use IntellivoidAPI\Objects\RequestRecordEntry;
 
     /**
      * Class RequestRecordManager
@@ -26,5 +28,8 @@
             $this->intellivoidAPI = $intellivoidAPI;
         }
 
-        public logRecord()
+        public function logRecord(RequestRecordEntry $requestRecordEntry): bool
+        {
+
+        }
     }
