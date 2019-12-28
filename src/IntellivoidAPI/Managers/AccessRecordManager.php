@@ -300,7 +300,17 @@
 
             $this->updateAccessRecord($accessRecord);
 
-            $Query = QueryBuilder::insert_into("")
+            $Query = QueryBuilder::insert_into("access_key_changes", array(
+                'access_record_id' => $accessRecord,
+                'old_access_key' => $old_access_key,
+                'new_access_key' => $new_access_key,
+                'timestamp' => (int)$accessRecord->CreatedTimestamp
+            ));
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+            if($QueryResults == false)
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
 
             return $accessRecord;
         }
