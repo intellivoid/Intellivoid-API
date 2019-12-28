@@ -6,6 +6,8 @@
 
     use IntellivoidAPI\Abstracts\SearchMethods\AccessRecordSearchMethod;
     use IntellivoidAPI\Exceptions\DatabaseException;
+    use IntellivoidAPI\Exceptions\InvalidSearchMethodException;
+    use IntellivoidAPI\Exceptions\RequestRecordNotFoundException;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\RequestRecord;
     use IntellivoidAPI\Objects\RequestRecordEntry;
@@ -203,5 +205,73 @@
             }
         }
 
-        pulic
+        /**
+         * Returns a request record object from the database
+         *
+         * @param string $search_method
+         * @param $value
+         * @return RequestRecord
+         * @throws DatabaseException
+         * @throws InvalidSearchMethodException
+         * @throws RequestRecordNotFoundException
+         */
+        public function getRequestRecord(string $search_method, $value): RequestRecord
+        {
+            /** @noinspection DuplicatedCode */
+            switch($search_method)
+            {
+                case AccessRecordSearchMethod::byId:
+                    $search_method = $this->intellivoidAPI->getDatabase()->real_escape_string($search_method);
+                    $value = (int)$value;
+                    break;
+
+                case AccessRecordSearchMethod::byAccessKey:
+                    $search_method = $this->intellivoidAPI->getDatabase()->real_escape_string($search_method);
+                    $value = $this->intellivoidAPI->getDatabase()->real_escape_string($value);
+                    break;
+
+                default:
+                    throw new InvalidSearchMethodException();
+            }
+
+            $Query = QueryBuilder::select('request_records', [
+                'id',
+                'reference_id',
+                'access_record_id',
+                'application_id',
+                'request_method',
+                'version',
+                'path',
+                'request_payload',
+                'ip_address',
+                'user_agent',
+                'response_code',
+                'response_content_type',
+                'response_length',
+                'response_time',
+                'day',
+                'month',
+                'year',
+                'timestamp'
+            ], $search_method, $value);
+
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
+            if($QueryResults == false)
+            {
+                throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
+            }
+            else
+            {
+                if($QueryResults->num_rows !== 1)
+                {
+                    throw new RequestRecordNotFoundException();
+                }
+
+                $Row = $QueryResults->fetch_array(MYSQLI_ASSOC);
+                $Row['request_payload'] = ZiProto::decode($Row['request_payload']);
+
+                return RequestRecord::fromArray($Row);
+            }
+        }
     }
