@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 
     namespace IntellivoidAPI\Managers;
@@ -11,7 +11,6 @@
     use IntellivoidAPI\Exceptions\InvalidRateLimitConfiguration;
     use IntellivoidAPI\Exceptions\InvalidSearchMethodException;
     use IntellivoidAPI\IntellivoidAPI;
-    use IntellivoidAPI\Objects\AccessKeyChangeRecord;
     use IntellivoidAPI\Objects\AccessRecord;
     use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
     use IntellivoidAPI\Utilities\Hashing;
@@ -124,6 +123,7 @@
          */
         public function getAccessRecord(string $search_by, $value): AccessRecord
         {
+            /** @noinspection DuplicatedCode */
             switch($search_by)
             {
                 case AccessRecordSearchMethod::byId:
@@ -301,7 +301,7 @@
             $this->updateAccessRecord($accessRecord);
 
             $Query = QueryBuilder::insert_into("access_key_changes", array(
-                'access_record_id' => $accessRecord,
+                'access_record_id' => $access_record_id,
                 'old_access_key' => $old_access_key,
                 'new_access_key' => $new_access_key,
                 'timestamp' => (int)$accessRecord->CreatedTimestamp
