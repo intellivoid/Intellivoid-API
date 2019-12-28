@@ -9,7 +9,7 @@ create table request_records
     path                  varchar(255) null comment 'The request path that was given',
     request_payload       blob         null comment 'Zi Proto encoded data of the GET/POST payload sent from the client',
     ip_address            varchar(255) null comment 'The IP Address that was used to create the request',
-    user_agent            varchar(255) null comment 'Base64 Encoded data of the User Agent that was used (512 Characters max)',
+    user_agent            varchar(624) null comment 'Base64 Encoded data of the User Agent that was used (512 Characters max)',
     response_code         int(255)     null comment 'The response code that was used after the request has been completed',
     response_content_type varchar(255) null comment 'The content type given in the response',
     response_length       int(255)     null comment 'The length of the response in bytes',

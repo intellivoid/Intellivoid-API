@@ -7,6 +7,7 @@
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\RequestRecord;
     use IntellivoidAPI\Objects\RequestRecordEntry;
+    use IntellivoidAPI\Utilities\Validate;
     use ZiProto\ZiProto;
 
     /**
@@ -95,6 +96,56 @@
 
             $request_payload = ZiProto::encode($requestRecordEntry->RequestPayload);
             $request_payload = $this->intellivoidAPI->getDatabase()->real_escape_string($request_payload);
+
+            if(Validate::ip_address($requestRecordEntry->IPAddress))
+            {
+                $ip_address = $requestRecordEntry->IPAddress;
+                $ip_address = $this->intellivoidAPI->getDatabase()->real_escape_string($ip_address);
+            }
+
+            if(strlen($requestRecordEntry->UserAgent) < 526)
+            {
+                $user_agent = base64_encode($requestRecordEntry->UserAgent);
+                $user_agent = $this->intellivoidAPI->getDatabase()->real_escape_string($user_agent);
+            }
+
+            if($requestRecordEntry->ResponseCode == null)
+            {
+                $response_code = 0;
+            }
+            else
+            {
+                $response_code = (int)$requestRecordEntry->ResponseCode;
+            }
+
+            if($requestRecordEntry->ResponseContentType !== null)
+            {
+                if(strlen($requestRecordEntry->ResponseContentType) > 1)
+                {
+                    if(strlen($requestRecordEntry->ResponseContentType) < 255)
+                    {
+                        $response_content_type = $this->intellivoidAPI->getDatabase()->real_escape_string($requestRecordEntry->ResponseContentType);
+                    }
+                }
+            }
+
+            if($requestRecordEntry->ResponseLength == null)
+            {
+                $response_length = 0;
+            }
+            else
+            {
+                $response_length = (int)$requestRecordEntry->ResponseLength;
+            }
+
+            if($requestRecordEntry->ResponseTime == null)
+            {
+                $response_time = (float)0;
+            }
+            else
+            {
+                $response_time = (float)$requestRecordEntry->ResponseTime;
+            }
 
 
 
