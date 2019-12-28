@@ -11,6 +11,7 @@
     use IntellivoidAPI\Exceptions\InvalidRateLimitConfiguration;
     use IntellivoidAPI\Exceptions\InvalidSearchMethodException;
     use IntellivoidAPI\IntellivoidAPI;
+    use IntellivoidAPI\Objects\AccessKeyChangeRecord;
     use IntellivoidAPI\Objects\AccessRecord;
     use IntellivoidAPI\Objects\RateLimitTypes\IntervalLimit;
     use IntellivoidAPI\Utilities\Hashing;
@@ -286,14 +287,20 @@
          */
         public function generateNewAccessKey(AccessRecord $accessRecord): AccessRecord
         {
+            $access_record_id = (int)$accessRecord->ID;
+            $old_access_key = $this->intellivoidAPI->getDatabase()->real_escape_string($accessRecord->AccessKey);
+
             $accessRecord->LastChangedAccessKey = (int)time();
             $accessRecord->AccessKey = Hashing::generateAccessKey(
                 $accessRecord->ApplicationID,
                 $accessRecord->LastChangedAccessKey,
                 $accessRecord->ID
             );
+            $new_access_key = $this->intellivoidAPI->getDatabase()->real_escape_string($accessRecord->AccessKey);
 
             $this->updateAccessRecord($accessRecord);
+
+            $Query = QueryBuilder::insert_into("")
 
             return $accessRecord;
         }

@@ -39,6 +39,13 @@
         public $NewAccessKey;
 
         /**
+         * The Unix Timestamp of when this change was logged
+         *
+         * @var int
+         */
+        public $Timestamp;
+
+        /**
          * Returns an array which represents this object
          *
          * @return array
@@ -46,10 +53,11 @@
         public function toArray(): array
         {
             return array(
-                'id' => $this->ID,
-                'access_record_id' => $this->AccessRecordID,
+                'id' => (int)$this->ID,
+                'access_record_id' => (int)$this->AccessRecordID,
                 'old_access_key' => $this->OldAccessKey,
-                'new_access_key' => $this->NewAccessKey
+                'new_access_key' => $this->NewAccessKey,
+                'timestamp' => (int)$this->Timestamp
             );
         }
 
@@ -81,6 +89,11 @@
             if(isset($data['new_access_key']))
             {
                 $AccessKeyChangeRecordObject->NewAccessKey = $data['new_access_key'];
+            }
+
+            if(isset($data['timestamp']))
+            {
+                $AccessKeyChangeRecordObject->Timestamp = (int)$data['timestamp'];
             }
 
             return $AccessKeyChangeRecordObject;
