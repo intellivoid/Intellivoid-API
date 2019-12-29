@@ -7,18 +7,35 @@
     use acm\acm;
     use Exception;
     use IntellivoidAPI\Managers\AccessRecordManager;
+    use IntellivoidAPI\Managers\RequestRecordManager;
     use mysqli;
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
 
+    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'AccessRecordSearchMethod.php');
+    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'RequestRecordSearchMethod.php');
+    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'AccessRecordStatus.php');
     include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'RateLimitName.php');
 
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'AccessRecordNotFoundException.php');
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'DatabaseException.php');
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidRateLimitConfiguration.php');
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidSearchMethodException.php');
     include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RateLimitExceededException.php');
-
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
+    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RequestRecordNotFoundException.php');
 
     include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessRecordManager.php');
+    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'RequestRecordManager.php');
+
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKeyChangeRecord.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecord.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecordEntry.php');
+
+    include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Hashing.php');
+    include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Validate.php');
+
 
     if(class_exists('acm\acm') == false)
     {
@@ -62,6 +79,11 @@
         private $AccessKeyManager;
 
         /**
+         * @var RequestRecordManager
+         */
+        private $RequestRecordManager;
+
+        /**
          * IntellivoidAPI constructor.
          */
         public function __construct()
@@ -88,6 +110,7 @@
             );
 
             $this->AccessKeyManager = new AccessRecordManager($this);
+            $this->RequestRecordManager = new RequestRecordManager($this);
         }
 
         /**
@@ -122,5 +145,12 @@
             return $this->AccessKeyManager;
         }
 
+        /**
+         * @return RequestRecordManager
+         */
+        public function getRequestRecordManager(): RequestRecordManager
+        {
+            return $this->RequestRecordManager;
+        }
 
     }
