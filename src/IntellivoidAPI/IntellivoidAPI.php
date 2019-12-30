@@ -89,7 +89,7 @@
          */
         public function __construct()
         {
-            $this->acm = new acm(__DIR__, 'Intellivoid Accounts');
+            $this->acm = new acm(__DIR__, 'Intellivoid API');
 
             try
             {

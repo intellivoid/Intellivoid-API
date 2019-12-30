@@ -106,8 +106,6 @@
             }
             else
             {
-                var_dump($Query);
-                var_dump($this->intellivoidAPI->getDatabase()->error);
                 throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
             }
         }
