@@ -30,6 +30,7 @@
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKeyChangeRecord.php');
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
+    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'ExceptionRecord.php');
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecord.php');
     include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecordEntry.php');
 
