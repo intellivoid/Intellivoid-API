@@ -7,6 +7,7 @@
     use Exception;
     use IntellivoidAPI\Abstracts\SearchMethods\ExceptionRecordSearchMethod;
     use IntellivoidAPI\Exceptions\DatabaseException;
+    use IntellivoidAPI\Exceptions\ExceptionRecordNotFoundException;
     use IntellivoidAPI\Exceptions\InvalidSearchMethodException;
     use IntellivoidAPI\IntellivoidAPI;
     use IntellivoidAPI\Objects\AccessRecord;
@@ -42,6 +43,7 @@
          * @param Exception $exception
          * @return bool
          * @throws DatabaseException
+         * @noinspection PhpUnused
          */
         public function recordException(int $requestRecordID, AccessRecord $accessRecord, Exception $exception)
         {
@@ -85,6 +87,17 @@
             }
         }
 
+        /**
+         * Gets an existing Exception Record from the database
+         *
+         * @param string $search_method
+         * @param $value
+         * @return ExceptionRecord
+         * @throws DatabaseException
+         * @throws ExceptionRecordNotFoundException
+         * @throws InvalidSearchMethodException
+         * @noinspection PhpUnused
+         */
         public function getExceptionRecord(string $search_method, $value): ExceptionRecord
         {
             switch($search_method)
@@ -111,6 +124,8 @@
                 'trace',
                 'timestamp'
             ], $search_method, $value);
+            $QueryResults = $this->intellivoidAPI->getDatabase()->query($Query);
+
             if($QueryResults == false)
             {
                 throw new DatabaseException($Query, $this->intellivoidAPI->getDatabase()->error);
@@ -119,14 +134,13 @@
             {
                 if($QueryResults->num_rows !== 1)
                 {
-                    throw new AccessRecordNotFoundException();
+                    throw new ExceptionRecordNotFoundException();
                 }
 
                 $Row = $QueryResults->fetch_array(MYSQLI_ASSOC);
-                $Row['variables'] = ZiProto::decode($Row['variables']);
-                $Row['rate_limit_configuration'] = ZiProto::decode($Row['rate_limit_configuration']);
+                $Row['trace'] = ZiProto::decode($Row['trace']);
 
-                return AccessRecord::fromArray($Row);
+                return ExceptionRecord::fromArray($Row);
             }
         }
     }
