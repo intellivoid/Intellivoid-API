@@ -1,0 +1,129 @@
+{
+    "package": {
+        "package_name": "net.intellivoid.api",
+        "name": "Intellivoid API",
+        "version": "1.0.0.3",
+        "author": "Zi Xing Narrakas",
+        "organization": "Intellivoid",
+        "description": "Manages API Authentications and quota limits",
+        "url": "https://github.com/intellivoid/Intellivoid-API",
+        "dependencies": [
+            {"package": "net.intellivoid.acm", "version": "latest", "required": true},
+            {"package": "net.intellivoid.deepanalytics", "version": "latest", "required": true},
+            {"package": "net.intellivoid.msqg", "version": "latest", "required": true},
+            {"package": "net.intellivoid.ziproto", "version": "latest", "required": true}
+        ],
+        "configuration": {
+            "autoload_method": "indexed",
+            "main": null,
+            "post_installation": [],
+            "pre_installation": []
+        }
+    },
+    "components": [
+        {
+            "required": true,
+            "file": "Abstracts/AccessRecordStatus.php"
+        },
+        {
+            "required": true,
+            "file": "Abstracts/RateLimitName.php"
+        },
+        {
+            "required": true,
+            "file": "Abstracts/SearchMethods/AccessRecordSearchMethod.php"
+        },
+        {
+            "required": true,
+            "file": "Abstracts/SearchMethods/ExceptionRecordSearchMethod.php"
+        },
+        {
+            "required": true,
+            "file": "Abstracts/SearchMethods/RequestRecordSearchMethod.php"
+        },
+        {
+            "required": true,
+            "file": "AutoConfig.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/AccessRecordNotFoundException.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/DatabaseException.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/ExceptionRecordNotFoundException.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/InvalidRateLimitConfiguration.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/InvalidSearchMethodException.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/RateLimitExceededException.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/RequestRecordNotFoundException.php"
+        },
+        {
+            "required": true,
+            "file": "IntellivoidAPI.php"
+        },
+        {
+            "required": true,
+            "file": "Managers/AccessRecordManager.php"
+        },
+        {
+            "required": true,
+            "file": "Managers/ExceptionRecordManager.php"
+        },
+        {
+            "required": true,
+            "file": "Managers/RequestRecordManager.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/AccessKeyChangeRecord.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/AccessRecord.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/ExceptionRecord.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/RateLimitTypes/IntervalLimit.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/RequestRecord.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/RequestRecordEntry.php"
+        },
+        {
+            "required": true,
+            "file": "Utilities/Hashing.php"
+        },
+        {
+            "required": true,
+            "file": "Utilities/Validate.php"
+        }
+    ],
+    "files": [
+        "configuration.ini",
+        "intellivoid_api.json"
+    ]
+}
