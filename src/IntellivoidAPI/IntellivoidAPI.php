@@ -11,58 +11,73 @@
     use IntellivoidAPI\Managers\ExceptionRecordManager;
     use IntellivoidAPI\Managers\RequestRecordManager;
     use mysqli;
+    use ppm\ppm;
 
     $LocalDirectory = __DIR__ . DIRECTORY_SEPARATOR;
 
-    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'AccessRecordSearchMethod.php');
-    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'ExceptionRecordSearchMethod.php');
-    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'RequestRecordSearchMethod.php');
-    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'AccessRecordStatus.php');
-    include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'RateLimitName.php');
+    if(defined("PPM") == false)
+    {
+        include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'AccessRecordSearchMethod.php');
+        include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'ExceptionRecordSearchMethod.php');
+        include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'SearchMethods' . DIRECTORY_SEPARATOR . 'RequestRecordSearchMethod.php');
+        include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'AccessRecordStatus.php');
+        include_once($LocalDirectory . 'Abstracts' . DIRECTORY_SEPARATOR . 'RateLimitName.php');
 
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'AccessRecordNotFoundException.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'DatabaseException.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'ExceptionRecordNotFoundException.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidRateLimitConfiguration.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidSearchMethodException.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RateLimitExceededException.php');
-    include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RequestRecordNotFoundException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'AccessRecordNotFoundException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'DatabaseException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'ExceptionRecordNotFoundException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidRateLimitConfiguration.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'InvalidSearchMethodException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RateLimitExceededException.php');
+        include_once($LocalDirectory . 'Exceptions' . DIRECTORY_SEPARATOR . 'RequestRecordNotFoundException.php');
 
-    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessRecordManager.php');
-    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'ExceptionRecordManager.php');
-    include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'RequestRecordManager.php');
+        include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'AccessRecordManager.php');
+        include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'ExceptionRecordManager.php');
+        include_once($LocalDirectory . 'Managers' . DIRECTORY_SEPARATOR . 'RequestRecordManager.php');
 
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKeyChangeRecord.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'ExceptionRecord.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecord.php');
-    include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecordEntry.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RateLimitTypes' . DIRECTORY_SEPARATOR . 'IntervalLimit.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessKeyChangeRecord.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'AccessRecord.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'ExceptionRecord.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecord.php');
+        include_once($LocalDirectory . 'Objects' . DIRECTORY_SEPARATOR . 'RequestRecordEntry.php');
 
-    include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Hashing.php');
-    include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Validate.php');
+        include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Hashing.php');
+        include_once($LocalDirectory . 'Utilities' . DIRECTORY_SEPARATOR . 'Validate.php');
+
+        if(class_exists('acm\acm') == false)
+        {
+            /** @noinspection PhpIncludeInspection */
+            include_once(__DIR__ . DIRECTORY_SEPARATOR . 'acm' . DIRECTORY_SEPARATOR . 'acm.php');
+        }
+
+        if(class_exists('msqg\msqg') == false)
+        {
+            /** @noinspection PhpIncludeInspection */
+            include_once(__DIR__ . DIRECTORY_SEPARATOR . 'msqg' . DIRECTORY_SEPARATOR . 'msqg.php');
+        }
+
+        if(class_exists('ZiProto\ZiProto') == false)
+        {
+            /** @noinspection PhpIncludeInspection */
+            include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ZiProto' . DIRECTORY_SEPARATOR . 'ZiProto.php');
+        }
+
+        if(class_exists('DeepAnalytics\DeepAnalytics') == false)
+        {
+            /** @noinspection PhpIncludeInspection */
+            include_once(__DIR__ . DIRECTORY_SEPARATOR . 'DeepAnalytics' . DIRECTORY_SEPARATOR . 'DeepAnalytics.php');
+        }
+    }
+    else
+    {
+        ppm::import("net.intellivoid.acm");
+        ppm::import("net.intellivoid.deepanalytics");
+        ppm::import("net.intellivoid.msqg");
+        ppm::import("net.intellivoid.ziproto");
+    }
 
     include_once($LocalDirectory . 'AutoConfig.php');
-
-    if(class_exists('acm\acm') == false)
-    {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'acm' . DIRECTORY_SEPARATOR . 'acm.php');
-    }
-
-    if(class_exists('msqg\msqg') == false)
-    {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'msqg' . DIRECTORY_SEPARATOR . 'msqg.php');
-    }
-
-    if(class_exists('ZiProto\ZiProto') == false)
-    {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ZiProto' . DIRECTORY_SEPARATOR . 'ZiProto.php');
-    }
-
-    if(class_exists('DeepAnalytics\DeepAnalytics') == false)
-    {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'DeepAnalytics' . DIRECTORY_SEPARATOR . 'DeepAnalytics.php');
-    }
 
     /**
      * Class IntellivoidAPI
